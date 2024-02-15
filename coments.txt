@@ -1,0 +1,26 @@
+getWinner(){
+        let finalResult
+        let arrayOfWinners = this._arrayOfRounds.map(({_roundWinner})=> ({_roundWinner}))
+        let count1 = arrayOfWinners.filter(function(item){
+            if(item._roundWinner === 1){
+                return true
+            }else{
+                false
+            }
+        }).length
+        let count2 = arrayOfWinners.filter(function(item){
+            if(item._roundWinner === 1){
+                return true
+            }else{
+                false
+            }
+        }).length
+        if(count1 > count2){
+            finalResult = "1 Winner"
+        }else if(count1 < count2){
+            finalResult = "2 Winner"
+        }else{
+            finalResult = "Draw"
+        }
+        return  finalResult
+    }

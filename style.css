@@ -1,0 +1,67 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+
+/* CONTAINERS */
+.first-diagram{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px blue solid;
+    padding: 20px;
+    width: 300px;
+    height: 220px;
+    font-weight: bold;
+}
+
+.form-one{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px blue solid;
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+}
+
+.second-form{
+    border: 1px blue solid;
+    padding: 20px;
+    width: 300px;
+    height: 220px;
+    font-weight: bold;
+}
+
+.game-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+}
+
+.rps,
+.name-score{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 100px;
+}
+
+.second-form,
+.game-section,
+.winner-board{
+    display: none;
+}
+
+/* BUTTONS */
+.next-btn{
+    padding: 10px 40px;
+    margin-top: 10px;
+}
+
+.game-section button{
+    width: 140px;
+    height: 140px;
+}
