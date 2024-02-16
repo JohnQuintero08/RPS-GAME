@@ -118,7 +118,6 @@ class Round {
     }
     setRoundWinner(result){
         if(result == null){
-            console.log("Draw")
             return this._roundWinner = null
         }else if(result){
             return this._roundWinner = 1
@@ -181,15 +180,22 @@ function secondFormFunction(){
     const startGameBtn = document.getElementById('start-game-btn') /* POR QUE DEBO DECLARAR ACA EL BOTON Y NO ARRIBA */
     startGameBtn.addEventListener("click", function(){
         nameFirstPlayer = document.getElementById('name1').value
-        if(numPlayers === 2){
-            nameSecondPlayer = document.getElementById('name2').value
-        }
+
         numberRounds = document.querySelector('input[name="round"]:checked').value
         secondForm.style.display = 'none'
         gameSection.style.display = 'block'
         game.setNumberOfRounds(numberRounds)
-        printBoardGame(0,0)
-        gameFunction()
+        if(numPlayers === 2){
+            nameSecondPlayer = document.getElementById('name2').value
+            printBoardGame(0,0)
+            gameFunction()
+        }else{
+            nameSecondPlayer = "Computer"
+            printBoardGame(0,0)
+            console.log("solo")
+            soloPlayer()
+        }
+        
     })
 }
 
@@ -229,7 +235,6 @@ function gameFunction(){
                 game.pushRound(round)
 
                 if(currentRound == numberRounds){
-                    console.log("hey")
                     if(points1 > points2){
                         winnerName = nameFirstPlayer
                     }else if(points1 < points2){
@@ -251,8 +256,6 @@ function gameFunction(){
                     printBoardGame(points1,points2)
                 }
 
-                console.log(game)
-                console.log(currentRound + ' ' + numberRounds)
                 newArray =  []
                 numTurno = 1
                 currentRound++
@@ -261,6 +264,79 @@ function gameFunction(){
         })
     })
 
+}
+
+function soloPlayer(){
+    let player1 = new Player(nameFirstPlayer, 0)
+    let player2 = new Player(nameSecondPlayer, 0)   
+    
+    document.querySelectorAll('[data-figure]').forEach(button => {
+        button.addEventListener("click", function(){
+            let choice 
+            let turno1 = new Turn()
+            let turnoPC = new Turn()
+            choice = button.getAttribute('data-figure')
+            turno1.setPlayer(player1.getName())
+            turno1.setShape(choice)
+            newArray.push(turno1) 
+
+            turnoPC.setPlayer(player2.getName())
+            turnoPC.setShape(randomShape())
+            console.log(turnoPC.getShape())
+            newArray.push(turnoPC)
+
+            let result = cambiarForma(newArray[0]._parShape).defeats(newArray[1]._parShape)
+            let round = new Round()
+            round.setRoundNumber(currentRound)
+            round.pushArrayOfTurns(newArray)
+            round.setRoundWinner(result)
+
+            if(round.getRoundWinner()== 1){
+                points1++
+            }else if(round.getRoundWinner() == 2){
+                points2++
+            }
+            game.pushRound(round)
+
+            if(currentRound == numberRounds){
+                if(points1 > points2){
+                    winnerName = nameFirstPlayer
+                }else if(points1 < points2){
+                    winnerName = nameSecondPlayer
+                }else{
+                    winnerName = "DRAW"
+                }
+                printBoardGame(points1, points2)
+                const rpsSelector = document.getElementById("rps-selector").style.display = 'none'
+                const winnerBoard = document.getElementById("winner-board")
+                winnerBoard.style.display = 'block'
+                winnerBoard.innerHTML = `
+                                        <h1>GAME WINNER:</h1>
+                                        <h3>${winnerName}</h3>
+                                        <h3>GAME OVER!</h3>
+                                        <h3>THANK YOU FOR PLAYING</h3>
+                                        `
+            }else{
+                printBoardGame(points1,points2)
+            }
+
+            newArray =  []
+            numTurno = 1
+            currentRound++
+            soloPlayer()
+        })
+    })
+}
+
+function randomShape(){
+    let random = Math.floor(Math.random() * 3)
+    if(random === 0){
+        return "Rock"
+    }else if(random === 1){
+        return "Scissors"
+    }else{
+        return "Paper"
+    }
 }
 
 function cambiarForma(h){
