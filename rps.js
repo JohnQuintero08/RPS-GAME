@@ -150,14 +150,6 @@ exitBtn.addEventListener("click", function(){
     location.reload()
 })
 
-htpAnchortag.addEventListener("click", function(){
-    const howToPlay = document.getElementById("how-to-play")
-    howToPlay.style.display = 'block'
-    document.getElementById("close-htp").addEventListener("click", function(){
-        howToPlay.style.display = 'none'
-    })
-})
-
 /* Function for the first button, creates the second window for the name and round selection */
 nextBtn.addEventListener("click", function(){
     let a = ''
@@ -401,7 +393,7 @@ function printBoardGame(p1, p2, ra){
                             <P> ${nameSecondPlayer}: ${p2}</P>
                         </div>
                         <div id="button-board">
-                            <div id="turn-sign"></div>
+                            <div id="turn-sign" class="turn-sign"></div>
                             <p>Select the shape:</p>
                             <div id="rps-selector" class="rps-selector">
                                 <button class="shape-button" id="rock-button"     data-figure="Rock"    > ROCK    </button>
@@ -416,7 +408,7 @@ function printBoardGame(p1, p2, ra){
 function turnSingLayout(){
     const turnSign = document.getElementById("turn-sign") 
     if(numTurno ==1 ){
-        turnSign.innerHTML =`<h2>${nameSecondPlayer} - Please Look Away</h2>
+        turnSign.innerHTML =`<h2 class="look-away-sign">${nameSecondPlayer} - Please Look Away</h2>
                             <p>${nameFirstPlayer}'s Turn</p>`
     }else{
         turnSign.innerHTML =`<h2>${nameFirstPlayer} - Please Look Away</h2>

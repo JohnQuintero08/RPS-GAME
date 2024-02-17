@@ -24,3 +24,31 @@ getWinner(){
         }
         return  finalResult
     }
+
+
+
+
+    htpAnchortag.addEventListener("click", function(){
+    const howToPlay = document.getElementById("how-to-play")
+    howToPlay.style.display = 'block'
+    document.getElementById("close-htp").addEventListener("click", function(){
+        howToPlay.style.display = 'none'
+    })
+})
+
+ <div class="how-to-play" id="how-to-play">
+                <div>
+                    <h3>HOW TO PLAY</h3>
+                    <ul>
+                        <li>Select the number of players and press NEXT button. For 1 Player game you will be playing against the computer</li>
+                        <li>Write your name and select the number of rounds you want to play. Press START GAME button to continue</li>
+                        <li>Press rock, paper or scissors button for playing</li>
+                        <li>If you are playing against someone else, you don't have to see the selection of your rival</li>
+                        <li>If you play against the computer, it will play automatically after you</li>
+                        <li>Press next turn button after you take the decission between rock, paper or scissors</li>
+                        <li>Play as much rounds as you want</li>
+                        <li>If you want to go back to the begging just press QUIT button</li>
+                    </ul>
+                </div>
+                <button class="close-htp" id="close-htp">X</button>
+            </div>
