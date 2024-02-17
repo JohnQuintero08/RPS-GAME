@@ -197,7 +197,7 @@ function secondFormFunction(){
                 if(nameSecondPlayer){
                     secondForm.style.display = 'none'
                     gameSection.style.display = 'block'
-                    printBoardGame(0,0)
+                    printBoardGame(0,0,0)
                     gameFunction()
                 }
                 else{
@@ -208,7 +208,7 @@ function secondFormFunction(){
                 secondForm.style.display = 'none'
                 gameSection.style.display = 'block'
                 nameSecondPlayer = "Computer"
-                printBoardGame(0,0)
+                printBoardGame(0,0,0)
                 soloPlayer()
             }
         }else{
@@ -225,7 +225,8 @@ let game = new Game()
 function gameFunction(){
     let player1 = new Player(nameFirstPlayer, 0)
     let player2 = new Player(nameSecondPlayer, 0)   
-    
+    turnSingLayout()
+
     document.querySelectorAll('[data-figure]').forEach(button => {
         button.addEventListener("click", function(){
             let choice 
@@ -236,6 +237,7 @@ function gameFunction(){
                 turno.setShape(choice)
                 newArray.push(turno) 
                 numTurno++
+                turnSingLayout()
             }else if(numTurno==2){
                 turno.setPlayer(player2.getName())
                 turno.setShape(choice)
@@ -255,26 +257,31 @@ function gameFunction(){
 
                 game.pushRound(round)
 
-                if(currentRound == numberRounds){
-                    if(points1 > points2){
-                        winnerName = nameFirstPlayer
-                    }else if(points1 < points2){
-                        winnerName = nameSecondPlayer
-                    }else{
-                        winnerName = "DRAW"
-                    }
-                    printBoardGame(points1, points2)
-                    const rpsSelector = document.getElementById("rps-selector").style.display = 'none'
+                if(currentRound >= numberRounds){
+                    printBoardGame(points1, points2,currentRound)
+                    document.getElementById("button-board").style.display = 'none'
                     const winnerBoard = document.getElementById("winner-board")
                     winnerBoard.style.display = 'block'
-                    winnerBoard.innerHTML = `
-                                            <h1>GAME WINNER:</h1>
-                                            <h3>${winnerName}</h3>
-                                            <h3>GAME OVER!</h3>
-                                            <h3>THANK YOU FOR PLAYING</h3>
-                                            `
+                    if(points1 == points2){
+                        winnerBoard.innerHTML = evenBoardLayout()
+                        document.getElementById("tiebreaker-button").addEventListener("click",function(){
+                            console.log("button")
+                            printBoardGame(points1, points2,currentRound)
+                            gameFunction()
+                        })
+                    }else{
+                        if(points1 > points2){
+                            winnerName = nameFirstPlayer
+                        }else if(points1 < points2){
+                            winnerName = nameSecondPlayer
+                        }
+                        winnerBoard.innerHTML = winnerBoardLayout(winnerName)
+                        document.getElementById("new-game-button").addEventListener("click", function(){
+                            location.reload()
+                        })
+                    }
                 }else{
-                    printBoardGame(points1,points2)
+                    printBoardGame(points1,points2,currentRound)
                 }
 
                 newArray =  []
@@ -290,7 +297,7 @@ function gameFunction(){
 function soloPlayer(){
     let player1 = new Player(nameFirstPlayer, 0)
     let player2 = new Player(nameSecondPlayer, 0)   
-    
+
     document.querySelectorAll('[data-figure]').forEach(button => {
         button.addEventListener("click", function(){
             let choice 
@@ -320,25 +327,25 @@ function soloPlayer(){
             game.pushRound(round)
 
             if(currentRound == numberRounds){
-                if(points1 > points2){
-                    winnerName = nameFirstPlayer
-                }else if(points1 < points2){
-                    winnerName = nameSecondPlayer
-                }else{
-                    winnerName = "DRAW"
-                }
-                printBoardGame(points1, points2)
-                const rpsSelector = document.getElementById("rps-selector").style.display = 'none'
+                printBoardGame(points1, points2,currentRound)
+                document.getElementById("button-board").style.display = 'none'
                 const winnerBoard = document.getElementById("winner-board")
                 winnerBoard.style.display = 'block'
-                winnerBoard.innerHTML = `
-                                        <h1>GAME WINNER:</h1>
-                                        <h3>${winnerName}</h3>
-                                        <h3>GAME OVER!</h3>
-                                        <h3>THANK YOU FOR PLAYING</h3>
-                                        `
+                if(points1 == points2){
+                    winnerBoard.innerHTML = evenBoardLayout()
+                }else{
+                    if(points1 > points2){
+                        winnerName = nameFirstPlayer
+                    }else if(points1 < points2){
+                        winnerName = nameSecondPlayer
+                    }
+                    winnerBoard.innerHTML = winnerBoardLayout(winnerName)
+                    document.getElementById("new-game-button").addEventListener("click", function(){
+                        location.reload()
+                    })
+                }
             }else{
-                printBoardGame(points1,points2)
+                printBoardGame(points1,points2,currentRound)
             }
 
             newArray =  []
@@ -386,21 +393,51 @@ function formRounds (){
 }
 
 /* Function that writes the main game window */
-function printBoardGame(a, b){
-    gameSection.innerHTML =`<h1>Round # of # </h1>
+function printBoardGame(p1, p2, ra){
+    gameSection.innerHTML =`<h1>Round ${ra} of ${numberRounds} </h1>
                         <h3>SCORE</h3>
                         <div class="name-score">
-                            <p> ${nameFirstPlayer} : ${a}</p>
-                            <P> ${nameSecondPlayer}: ${b}</P>
+                            <p> ${nameFirstPlayer} : ${p1}</p>
+                            <P> ${nameSecondPlayer}: ${p2}</P>
                         </div>
-                        <h3> NAME - PLEASE LOOK AWAY </h3>
-                        <p> NAME Turn</p>
-                        <p>Select the shape:</p>
-                        <div id="rps-selector" class="rps-selector">
-                            <button id="rock-button"     data-figure="Rock"    > ROCK    </button>
-                            <button id="paper-button"    data-figure="Paper"   > PAPER   </button>
-                            <button id="scissors-button" data-figure="Scissors"> SCISSORS</button>
+                        <div id="button-board">
+                            <div id="turn-sign"></div>
+                            <p>Select the shape:</p>
+                            <div id="rps-selector" class="rps-selector">
+                                <button class="shape-button" id="rock-button"     data-figure="Rock"    > ROCK    </button>
+                                <button class="shape-button" id="paper-button"    data-figure="Paper"   > PAPER   </button>
+                                <button class="shape-button" id="scissors-button" data-figure="Scissors"> SCISSORS</button>
+                            </div>
+                            <button class="next-turn-button" id="next-turn-button"> NEXT TURN</button>
                         </div>
-                        <button id="next-turn-button"> NEXT TURN</button>
                         <div id="winner-board" class="winner-board"> </div>`
+}
+
+function turnSingLayout(){
+    const turnSign = document.getElementById("turn-sign") 
+    if(numTurno ==1 ){
+        turnSign.innerHTML =`<h2>${nameSecondPlayer} - Please Look Away</h2>
+                            <p>${nameFirstPlayer}'s Turn</p>`
+    }else{
+        turnSign.innerHTML =`<h2>${nameFirstPlayer} - Please Look Away</h2>
+                            <p>${nameSecondPlayer}'s Turn</p>`   
+    }
+}
+
+function winnerBoardLayout(winnerName){
+    return `
+            <h1>GAME WINNER:</h1>
+            <h3> -- ${winnerName} -- </h3>
+            <h3>GAME OVER!</h3>
+            <h3>THANK YOU FOR PLAYING</h3>
+            <button class="new-game-button" id="new-game-button">NEW GAME</button>
+            `
+}
+
+function evenBoardLayout(){
+    return `
+            <h1>GAME WINNER:</h1>
+            <h3> -- DRAW -- </h3>
+            <button class="tiebreaker-button" id="tiebreaker-button">PLAY TIEBREAKER ROUND</button>
+            `
 }

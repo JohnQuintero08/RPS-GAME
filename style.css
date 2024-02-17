@@ -47,7 +47,7 @@ header{
     text-align: center;
     background-color: rgb(42, 39, 39);
     color: azure;
-    padding: 7px;
+    padding: 5px;
 }
 
 .how-to-play{
@@ -104,13 +104,15 @@ button,
     font-size: 10px;
 }
 
-.exit-btn{
+.exit-btn,
+.new-game-button,
+.next-turn-button{
     display: block;
     padding: 6px 20px;
     margin: 10px auto;
 }
 
-.game-section button{
+.rps-selector button{
     width: 140px;
     height: 140px;
 }
@@ -119,10 +121,18 @@ button,
     padding: 6px 60px;
     margin-top: 10px;
 }
+.next-turn-button{
+    padding: 6px;
+    margin-top: 10px;
+}
 
 .exit-btn,
 .next-btn,
-.start-game-btn{
+.new-game-button,
+.next-turn-button,
+.start-game-btn,
+.shape-button,
+.tiebreaker-button{
     font-family: "Space Mono", monospace;
     background-color: rgb(42, 39, 39);
     color: azure;
