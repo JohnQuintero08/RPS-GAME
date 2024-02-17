@@ -1,32 +1,59 @@
 <html>
     <head>
         <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     </head>
     <body>
-        <button class="exit-btn" id="exit-btn"> X </button>
-        <div class="first-diagram" id="first-diagram">
-            <h2> Select number of players: </h2>
-            <div class="form-one">
-                <form >
-                    <input type="radio" id="one-player-input" name="player-num" value="1" checked>
-                    <label for="one-player-label"> 1 PLAYER </label> <br>
-    
-                    <input type="radio" id="two-players-input" name="player-num" value="2">
-                    <label for="two-players-label" > 2 PLAYERS </label> <br>
-                    
-                    <input type="button" value="NEXT" class="next-btn" id="next-btn">
-                </form>
-                <a>How to play?</a>
-            </div>
-        </div>
-
-        <div class="second-form" id="second-form">
-
-        </div>
+        <header>
+            <h1>John's</h1>
+            <h1>Rock , Paper, Scissors</h1>
+        </header>
+        <main>
+            <button class="exit-btn" id="exit-btn"> QUIT </button>
+            <div class="first-diagram" id="first-diagram">
+                <h2> Select number of players: </h2>
+                <div class="form-one">
+                    <form >
+                        <input type="radio" id="one-player-input" name="player-num" value="1" checked>
+                        <label for="one-player-label"> 1 PLAYER </label> <br>
         
-        <div class="game-section" id="game-section">
+                        <input type="radio" id="two-players-input" name="player-num" value="2">
+                        <label for="two-players-label" > 2 PLAYERS </label> <br>
+                        
+                        <input type="button" value="NEXT" class="next-btn" id="next-btn">
+                    </form>
+                    <a id="htp-anchortag">How to play?</a>
+                </div>
+            </div>
+    
+            <div class="second-form" id="second-form">
+    
+            </div>
+            
+            <div class="game-section" id="game-section">
+    
+            </div>
 
-        </div>
+            <div class="how-to-play" id="how-to-play">
+                <div>
+                    <h3>HOW TO PLAY</h3>
+                    <ul>
+                        <li>Select the number of players and press NEXT button. For 1 Player game you will be playing against the computer</li>
+                        <li>Write your name and select the number of rounds you want to play. Press START GAME button to continue</li>
+                        <li>Press rock, paper or scissors button for playing</li>
+                        <li>If you are playing against someone else, you don't have to see the selection of your rival</li>
+                        <li>If you play against the computer, it will play automatically after you</li>
+                        <li>Press next turn button after you take the decission between rock, paper or scissors</li>
+                        <li>Play as much rounds as you want</li>
+                        <li>If you want to go back to the begging just press QUIT button</li>
+                    </ul>
+                </div>
+                <button class="close-htp" id="close-htp">X</button>
+            </div>
+        </main>
 
         <script src="rps.js"></script>
     </body>

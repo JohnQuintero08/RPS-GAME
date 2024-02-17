@@ -11,6 +11,7 @@ let winnerName
 
 const nextBtn = document.getElementById('next-btn')
 const exitBtn = document.getElementById('exit-btn')
+const htpAnchortag = document.getElementById('htp-anchortag')
 
 const onePlayerInput = document.getElementById('one-player-input')
 const firstDiagram = document.getElementById('first-diagram')
@@ -149,6 +150,14 @@ exitBtn.addEventListener("click", function(){
     location.reload()
 })
 
+htpAnchortag.addEventListener("click", function(){
+    const howToPlay = document.getElementById("how-to-play")
+    howToPlay.style.display = 'block'
+    document.getElementById("close-htp").addEventListener("click", function(){
+        howToPlay.style.display = 'none'
+    })
+})
+
 /* Function for the first button, creates the second window for the name and round selection */
 nextBtn.addEventListener("click", function(){
     let a = ''
@@ -156,16 +165,16 @@ nextBtn.addEventListener("click", function(){
         numPlayers = 1
         a = `<form class="one-player-form" id="one-player-form">
                 <label for="name1">Enter name player 1 </label> <br>
-                <input id="name1" type="text">       
+                <input id="name1" type="text" required>       
             </form>`
     }else{
         numPlayers = 2
         a = `<form class="two-players-form"id="two-players-form">
                     <label for="name1">Enter name player 1 </label> <br>
-                    <input id="name1" type="text"> <br>
+                    <input id="name1" type="text" required> <br>
 
                     <label for="name2">Enter name player 2 </label> <br>
-                    <input id="name2" type="text">
+                    <input id="name2" type="text" required>
                 </form>`
     }
     firstDiagram.style.display = 'none'
@@ -177,24 +186,36 @@ nextBtn.addEventListener("click", function(){
 
 /* Function that allows to insert the name and select the number of rounds */
 function secondFormFunction(){
-    const startGameBtn = document.getElementById('start-game-btn') /* POR QUE DEBO DECLARAR ACA EL BOTON Y NO ARRIBA */
+    const startGameBtn = document.getElementById('start-game-btn') 
     startGameBtn.addEventListener("click", function(){
         nameFirstPlayer = document.getElementById('name1').value
-
-        numberRounds = document.querySelector('input[name="round"]:checked').value
-        secondForm.style.display = 'none'
-        gameSection.style.display = 'block'
-        game.setNumberOfRounds(numberRounds)
-        if(numPlayers === 2){
-            nameSecondPlayer = document.getElementById('name2').value
-            printBoardGame(0,0)
-            gameFunction()
+        if(nameFirstPlayer){
+            numberRounds = document.querySelector('input[name="round"]:checked').value
+            game.setNumberOfRounds(numberRounds)
+            if(numPlayers === 2){
+                nameSecondPlayer = document.getElementById('name2').value
+                if(nameSecondPlayer){
+                    secondForm.style.display = 'none'
+                    gameSection.style.display = 'block'
+                    printBoardGame(0,0)
+                    gameFunction()
+                }
+                else{
+                    document.getElementById("emergency").style.display = 'block'
+                    secondFormFunction()
+                }
+            }else{
+                secondForm.style.display = 'none'
+                gameSection.style.display = 'block'
+                nameSecondPlayer = "Computer"
+                printBoardGame(0,0)
+                soloPlayer()
+            }
         }else{
-            nameSecondPlayer = "Computer"
-            printBoardGame(0,0)
-            console.log("solo")
-            soloPlayer()
+            document.getElementById("emergency").style.display = 'block'
+            secondFormFunction()
         }
+
         
     })
 }
@@ -355,12 +376,13 @@ function cambiarForma(h){
 function formRounds (){
     return `<div class="round-form" id="round-form">
                 <p>Select the number of rounds:</p>
-                <input type="radio" name="round" value="1" id="one-rounds"  > ONE   <br>
+                <input type="radio" name="round" value="1" id="one-rounds"  checked> ONE   <br>
                 <input type="radio" name="round" value="3" id="three-rounds"> THREE <br>
                 <input type="radio" name="round" value="5" id="five-rounds" > FIVE  <br>
                 <input type="radio" name="round" value="7" id="seven-rounds"> SEVEN <br>   
             </div>
-            <button id="start-game-btn"> START GAME </button>`
+            <button id="start-game-btn" class="start-game-btn"> START GAME </button>
+            <p id="emergency" class="emergency"> *please fill all the blanks</p>`
 }
 
 /* Function that writes the main game window */

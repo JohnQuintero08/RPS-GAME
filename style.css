@@ -1,17 +1,30 @@
 body{
     padding: 0;
     margin: 0;
+    font-size: 16px;
+    font-family: "Space Mono", monospace;
 }
 
 /* CONTAINERS */
-.first-diagram{
+
+.first-diagram,
+.game-section,
+.second-one,
+.second-form{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 1px blue solid;
-    padding: 20px;
+    text-align: center;
+    margin: 20px auto;
+    padding: auto;
+}
+
+.first-diagram,
+.second-form{
+    border: 1px rgb(42, 39, 39) solid;
+    border-radius: 10px;
     width: 300px;
-    height: 220px;
+    padding: 20px;
     font-weight: bold;
 }
 
@@ -19,49 +32,115 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px blue solid;
-    margin: 10px;
+    margin: auto;
     padding: 15px;
     width: 200px;
 }
 
-.second-form{
-    border: 1px blue solid;
-    padding: 20px;
-    width: 300px;
-    height: 220px;
-    font-weight: bold;
+.game-section,
+.second-form,
+.winner-board{
+    display: none;
 }
 
-.game-section{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+header{
     text-align: center;
-
+    background-color: rgb(42, 39, 39);
+    color: azure;
+    padding: 7px;
 }
 
-.rps,
-.name-score{
+.how-to-play{
+    display: none;
+    background-color: wheat;
+    color: blueviolet;
+    border: 2px solid brown;
+    border-radius: 5px;
+    margin: auto;
+    padding: 20px;
+    position: fixed;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%)
+}
+
+.name-score,
+.rps{
     display: flex;
     justify-content: center;
     flex-direction: row;
     gap: 100px;
 }
 
-.second-form,
-.game-section,
-.winner-board{
-    display: none;
+.one-player-form label,
+.two-player-form label{
+    margin-bottom: 20px;
+}
+
+@media (max-width: 480px){
+    body{
+        color: aqua;
+    }
 }
 
 /* BUTTONS */
-.next-btn{
-    padding: 10px 40px;
-    margin-top: 10px;
+a,
+button,
+.next-btn:hover{
+    cursor: pointer;
+}
+
+.close-htp{
+    padding: 5px;
+    margin: auto;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgb(240, 202, 131);
+    color: blueviolet;
+    border-radius: 5px;
+    border: solid 1px brown;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.exit-btn{
+    display: block;
+    padding: 6px 20px;
+    margin: 10px auto;
 }
 
 .game-section button{
     width: 140px;
     height: 140px;
+}
+
+.next-btn{
+    padding: 6px 60px;
+    margin-top: 10px;
+}
+
+.exit-btn,
+.next-btn,
+.start-game-btn{
+    font-family: "Space Mono", monospace;
+    background-color: rgb(42, 39, 39);
+    color: azure;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
+
+.start-game-btn{
+    padding: 6px 20px;
+    margin-top: 20px;
+}
+/* TEXT */
+.first-diagram a{
+    text-decoration: underline;
+    color: rgb(55, 55, 239);
+}
+
+.emergency{
+    display: none;
 }
