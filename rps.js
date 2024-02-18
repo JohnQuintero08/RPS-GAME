@@ -147,6 +147,7 @@ class Game{
 /* FUNCTIONS */
 
 exitBtn.addEventListener("click", function(){
+    console.log("hey")
     location.reload()
 })
 
