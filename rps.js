@@ -8,6 +8,8 @@ let currentRound = 1
 let points1 = 0
 let points2 = 0
 let winnerName 
+let shapeWinner
+let choice 
 
 const nextBtn = document.getElementById('next-btn')
 const exitBtn = document.getElementById('exit-btn')
@@ -18,10 +20,11 @@ const firstDiagram = document.getElementById('first-diagram')
 const secondForm = document.getElementById('second-form')
 const gameSection = document.getElementById('game-section')
 
-/* CLASSES */
+/* CLASSES DEFINITIONS*/
 class Rock {
     constructor(){
         this._parShapeName = "Rock"
+        this._arrayOfImages = ["images/player1Rock.png","images/player2Rock.png"]
     }
     defeats(shapeOponent){
         if(shapeOponent == "Scissors"){
@@ -32,11 +35,15 @@ class Rock {
             return false
         }
     }
+    getArrayOfImages(){
+        return this._arrayOfImages
+    }
 }
 
 class Paper {
     constructor(){
         this._parShapeName = "Paper"
+        this._arrayOfImages = ["images/player1Paper.png","images/player2Paper.png"]
     }
     defeats(shapeOponent){
         if(shapeOponent == "Rock"){
@@ -47,10 +54,14 @@ class Paper {
             return false
         }
     }
+    getArrayOfImages(){
+        return this._arrayOfImages
+    }
 }
 class Scissors {
     constructor(){
         this._parShapeName = "Scissors"
+        this._arrayOfImages = ["images/player1Scissors.png","images/player2Scissors.png"]
     }
     defeats(shapeOponent){
         if(shapeOponent == "Paper"){
@@ -60,6 +71,9 @@ class Scissors {
         }else{
             return false
         }
+    }
+    getArrayOfImages(){
+        return this._arrayOfImages
     }
 }
 
@@ -147,7 +161,6 @@ class Game{
 /* FUNCTIONS */
 
 exitBtn.addEventListener("click", function(){
-    console.log("hey")
     location.reload()
 })
 
@@ -207,9 +220,7 @@ function secondFormFunction(){
         }else{
             document.getElementById("emergency").style.display = 'block'
             secondFormFunction()
-        }
-
-        
+        }   
     })
 }
 
@@ -219,10 +230,10 @@ function gameFunction(){
     let player1 = new Player(nameFirstPlayer, 0)
     let player2 = new Player(nameSecondPlayer, 0)   
     turnSingLayout()
+    buttonImage(numTurno)
 
     document.querySelectorAll('[data-figure]').forEach(button => {
         button.addEventListener("click", function(){
-            let choice 
             let turno = new Turn()
             choice = button.getAttribute('data-figure')
             if(numTurno==1){
@@ -231,6 +242,7 @@ function gameFunction(){
                 newArray.push(turno) 
                 numTurno++
                 turnSingLayout()
+                buttonImage(numTurno)
             }else if(numTurno==2){
                 turno.setPlayer(player2.getName())
                 turno.setShape(choice)
@@ -243,9 +255,16 @@ function gameFunction(){
                 round.setRoundWinner(result)
 
                 if(round.getRoundWinner()== 1){
+                    shapeWinner = round.getArrayOfTurns()[0][0].getShape()
+                    roundWinner = nameFirstPlayer
                     points1++
                 }else if(round.getRoundWinner() == 2){
+                    shapeWinner = round.getArrayOfTurns()[0][1].getShape()
+                    roundWinner = nameSecondPlayer
                     points2++
+                }else{
+                    shapeWinner = round.getArrayOfTurns()[0][0].getShape()
+                    roundWinner = "DRAW"
                 }
 
                 game.pushRound(round)
@@ -258,7 +277,6 @@ function gameFunction(){
                     if(points1 == points2){
                         winnerBoard.innerHTML = evenBoardLayout()
                         document.getElementById("tiebreaker-button").addEventListener("click",function(){
-                            console.log("button")
                             printBoardGame(points1, points2,currentRound)
                             gameFunction()
                         })
@@ -275,6 +293,16 @@ function gameFunction(){
                     }
                 }else{
                     printBoardGame(points1,points2,currentRound)
+                    const winnerBoard = document.getElementById("winner-board")
+                    document.getElementById("button-board").style.display = 'none'
+                    winnerBoard.style.display = 'block'
+                    winnerBoard.innerHTML = turnWinnerLayout(roundWinner,round.getArrayOfTurns()[0][0].getShape(),round.getArrayOfTurns()[0][1].getShape())
+                    document.getElementById("result-place1").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][0].getShape()).getArrayOfImages()[0]}')`
+                    document.getElementById("result-place2").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][1].getShape()).getArrayOfImages()[1]}')`
+                    document.getElementById("next-turn-button").addEventListener("click",function(){
+                        printBoardGame(points1,points2,currentRound)
+                        gameFunction()
+                    })
                 }
 
                 newArray =  []
@@ -293,7 +321,7 @@ function soloPlayer(){
 
     document.querySelectorAll('[data-figure]').forEach(button => {
         button.addEventListener("click", function(){
-            let choice 
+            let roundWinner
             let turno1 = new Turn()
             let turnoPC = new Turn()
             choice = button.getAttribute('data-figure')
@@ -303,7 +331,6 @@ function soloPlayer(){
 
             turnoPC.setPlayer(player2.getName())
             turnoPC.setShape(randomShape())
-            console.log(turnoPC.getShape())
             newArray.push(turnoPC)
 
             let result = cambiarForma(newArray[0]._parShape).defeats(newArray[1]._parShape)
@@ -313,19 +340,30 @@ function soloPlayer(){
             round.setRoundWinner(result)
 
             if(round.getRoundWinner()== 1){
+                shapeWinner = turno1.getShape()
+                roundWinner = nameFirstPlayer
                 points1++
             }else if(round.getRoundWinner() == 2){
+                shapeWinner = turnoPC.getShape()
+                roundWinner = nameSecondPlayer
                 points2++
+            }else{
+                shapeWinner = turno1.getShape()
+                roundWinner = "DRAW"
             }
             game.pushRound(round)
 
-            if(currentRound == numberRounds){
+            if(currentRound >= numberRounds){
                 printBoardGame(points1, points2,currentRound)
                 document.getElementById("button-board").style.display = 'none'
                 const winnerBoard = document.getElementById("winner-board")
                 winnerBoard.style.display = 'block'
                 if(points1 == points2){
                     winnerBoard.innerHTML = evenBoardLayout()
+                    document.getElementById("tiebreaker-button").addEventListener("click",function(){
+                        printBoardGame(points1, points2,currentRound)
+                        gameFunction()
+                    })
                 }else{
                     if(points1 > points2){
                         winnerName = nameFirstPlayer
@@ -339,6 +377,14 @@ function soloPlayer(){
                 }
             }else{
                 printBoardGame(points1,points2,currentRound)
+                const winnerBoard = document.getElementById("winner-board")
+                document.getElementById("button-board").style.display = 'none'
+                winnerBoard.style.display = 'block'
+                winnerBoard.innerHTML = turnWinnerLayout(roundWinner, shapeWinner)
+                document.getElementById("next-turn-button").addEventListener("click",function(){
+                    printBoardGame(points1,points2,currentRound)
+                    soloPlayer()
+                })
             }
 
             newArray =  []
@@ -395,13 +441,12 @@ function printBoardGame(p1, p2, ra){
                         </div>
                         <div id="button-board">
                             <div id="turn-sign" class="turn-sign"></div>
-                            <p>Select the shape:</p>
                             <div id="rps-selector" class="rps-selector">
-                                <button class="shape-button" id="rock-button"     data-figure="Rock"    > ROCK    </button>
-                                <button class="shape-button" id="paper-button"    data-figure="Paper"   > PAPER   </button>
-                                <button class="shape-button" id="scissors-button" data-figure="Scissors"> SCISSORS</button>
+                                <p>Select the shape:</p>
+                                <button class="shape-button rock-button" id="rock-button"     data-figure="Rock"    > ROCK    </button>
+                                <button class="shape-button paper-button" id="paper-button"    data-figure="Paper"   > PAPER   </button>
+                                <button class="shape-button scissors-button" id="scissors-button" data-figure="Scissors"> SCISSORS</button>
                             </div>
-                            <button class="next-turn-button" id="next-turn-button"> NEXT TURN</button>
                         </div>
                         <div id="winner-board" class="winner-board"> </div>`
 }
@@ -433,4 +478,28 @@ function evenBoardLayout(){
             <h3> -- DRAW -- </h3>
             <button class="tiebreaker-button" id="tiebreaker-button">PLAY TIEBREAKER ROUND</button>
             `
+}
+
+function turnWinnerLayout(winner, shape1, shape2){
+    return `
+                        <h3>Winner of this round: ${winner}</h3>
+                        <div class="general-turn-container">
+                            <div class="turn-container">
+                                <h3>${nameFirstPlayer} selected:</h3>
+                                <div class="result-place ${shape1}-button" id="result-place1">${shape1}</div>
+                            </div>
+                            <div class="turn-container">
+                                <h3>${nameSecondPlayer} selected:</h3>
+                                <div class="result-place ${shape2}-button" id="result-place2">${shape2}</div>
+                            </div>
+                        </div>
+                        <button class="next-turn-button" id="next-turn-button"> NEXT TURN</button>
+                        `
+}
+
+function buttonImage(player){
+    player =player - 1
+    document.getElementById("rock-button").style.backgroundImage = `url('${new Rock().getArrayOfImages()[player]}')`
+    document.getElementById("scissors-button").style.backgroundImage = `url('${new Scissors().getArrayOfImages()[player]}')`
+    document.getElementById("paper-button").style.backgroundImage = `url('${new Paper().getArrayOfImages()[player]}')`
 }

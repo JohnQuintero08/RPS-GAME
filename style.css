@@ -43,6 +43,15 @@ body{
     display: none;
 }
 
+.general-turn-container{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
 header{
     text-align: center;
     background-color: rgb(42, 39, 39);
@@ -64,12 +73,18 @@ header{
     transform: translate(-50%, -50%)
 }
 
-.name-score,
-.rps{
+.name-score{
     display: flex;
     justify-content: center;
     flex-direction: row;
     gap: 100px;
+}
+
+.result-place{
+    border: solid 1px rgb(42, 39, 39);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .one-player-form label,
@@ -77,11 +92,6 @@ header{
     margin-bottom: 20px;
 }
 
-@media (max-width: 480px){
-    body{
-        color: aqua;
-    }
-}
 
 /* BUTTONS */
 a,
@@ -112,24 +122,11 @@ button,
     margin: 10px auto;
 }
 
-.rps-selector button{
-    width: 140px;
-    height: 140px;
-}
-
-.next-btn{
-    padding: 6px 60px;
-    margin-top: 10px;
-}
-.next-turn-button{
-    padding: 6px;
-    margin-top: 10px;
-}
-
 .exit-btn,
 .next-btn,
 .new-game-button,
 .next-turn-button,
+.result-place,
 .start-game-btn,
 .shape-button,
 .tiebreaker-button{
@@ -139,6 +136,25 @@ button,
     font-weight: bold;
     border-radius: 10px;
     font-size: 1.1rem;
+}
+
+.rock-button,
+.paper-button,
+.scissors-button,
+.result-place{
+    background-size: 340px 200px;
+    width: 340px;
+    height: 200px;
+    margin: 10px;
+}
+
+.next-btn{
+    padding: 6px 60px;
+    margin-top: 10px;
+}
+.next-turn-button{
+    padding: 6px;
+    margin-top: 10px;
 }
 
 .start-game-btn{
