@@ -318,6 +318,7 @@ function gameFunction(){
 function soloPlayer(){
     let player1 = new Player(nameFirstPlayer, 0)
     let player2 = new Player(nameSecondPlayer, 0)   
+    buttonImage(1)
 
     document.querySelectorAll('[data-figure]').forEach(button => {
         button.addEventListener("click", function(){
@@ -362,7 +363,7 @@ function soloPlayer(){
                     winnerBoard.innerHTML = evenBoardLayout()
                     document.getElementById("tiebreaker-button").addEventListener("click",function(){
                         printBoardGame(points1, points2,currentRound)
-                        gameFunction()
+                        soloPlayer()
                     })
                 }else{
                     if(points1 > points2){
@@ -380,7 +381,10 @@ function soloPlayer(){
                 const winnerBoard = document.getElementById("winner-board")
                 document.getElementById("button-board").style.display = 'none'
                 winnerBoard.style.display = 'block'
-                winnerBoard.innerHTML = turnWinnerLayout(roundWinner, shapeWinner)
+                winnerBoard.innerHTML = turnWinnerLayout(roundWinner, round.getArrayOfTurns()[0][0].getShape(),round.getArrayOfTurns()[0][1].getShape())
+                document.getElementById("result-place1").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][0].getShape()).getArrayOfImages()[0]}')`
+                document.getElementById("result-place2").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][1].getShape()).getArrayOfImages()[1]}')`
+                    
                 document.getElementById("next-turn-button").addEventListener("click",function(){
                     printBoardGame(points1,points2,currentRound)
                     soloPlayer()
