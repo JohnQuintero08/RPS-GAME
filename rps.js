@@ -10,6 +10,7 @@ let points2 = 0
 let winnerName 
 let shapeWinner
 let choice 
+let evalueate = false
 
 const nextBtn = document.getElementById('next-btn')
 const exitBtn = document.getElementById('exit-btn')
@@ -159,7 +160,7 @@ class Game{
 }
 
 /* FUNCTIONS */
-
+/* Function that reload the page to the begining */
 exitBtn.addEventListener("click", function(){
     location.reload()
 })
@@ -203,8 +204,9 @@ function secondFormFunction(){
                 if(nameSecondPlayer){
                     secondForm.style.display = 'none'
                     gameSection.style.display = 'block'
-                    printBoardGame(0,0,0)
-                    gameFunction()
+                    printBoardGame(0,0,1)
+                    gamePlay()
+                    /* gameFunction() */
                 }
                 else{
                     document.getElementById("emergency").style.display = 'block'
@@ -214,8 +216,9 @@ function secondFormFunction(){
                 secondForm.style.display = 'none'
                 gameSection.style.display = 'block'
                 nameSecondPlayer = "Computer"
-                printBoardGame(0,0,0)
-                soloPlayer()
+                printBoardGame(0,0,1)
+                gamePlay()
+                /* soloPlayer() */
             }
         }else{
             document.getElementById("emergency").style.display = 'block'
@@ -226,34 +229,55 @@ function secondFormFunction(){
 
 let game = new Game()
 
-function gameFunction(){
+function gamePlay(){
     let player1 = new Player(nameFirstPlayer, 0)
     let player2 = new Player(nameSecondPlayer, 0)   
-    turnSingLayout()
-    buttonImage(numTurno)
-
+    if(numPlayers == 2){
+        turnSingLayout()
+        buttonImage(numTurno)
+    }else{
+        buttonImage(1)
+    }
     document.querySelectorAll('[data-figure]').forEach(button => {
         button.addEventListener("click", function(){
-            let turno = new Turn()
             choice = button.getAttribute('data-figure')
-            if(numTurno==1){
-                turno.setPlayer(player1.getName())
-                turno.setShape(choice)
-                newArray.push(turno) 
-                numTurno++
-                turnSingLayout()
-                buttonImage(numTurno)
-            }else if(numTurno==2){
-                turno.setPlayer(player2.getName())
-                turno.setShape(choice)
-                newArray.push(turno)
+            if(numPlayers == 2){
+                let turno = new Turn()
+                if(numTurno==1){
+                    turno.setPlayer(player1.getName())
+                    turno.setShape(choice)
+                    newArray.push(turno) 
+                    numTurno++
+                    turnSingLayout()
+                    buttonImage(numTurno)
+                }else if(numTurno==2){
+                    turno.setPlayer(player2.getName())
+                    turno.setShape(choice)
+                    newArray.push(turno)
+                    evalueate = true 
+                }
+            }
+            else{
+                let turno1 = new Turn()
+                let turnoPC = new Turn()
+                choice = button.getAttribute('data-figure')
+                turno1.setPlayer(player1.getName())
+                turno1.setShape(choice)
+                newArray.push(turno1) 
+                
+                turnoPC.setPlayer(player2.getName())
+                turnoPC.setShape(randomShape())
+                newArray.push(turnoPC)
+                evalueate = true
+            }
 
+            if(evalueate){
                 let result = cambiarForma(newArray[0]._parShape).defeats(newArray[1]._parShape)
                 let round = new Round()
                 round.setRoundNumber(currentRound)
                 round.pushArrayOfTurns(newArray)
                 round.setRoundWinner(result)
-
+    
                 if(round.getRoundWinner()== 1){
                     shapeWinner = round.getArrayOfTurns()[0][0].getShape()
                     roundWinner = nameFirstPlayer
@@ -266,138 +290,60 @@ function gameFunction(){
                     shapeWinner = round.getArrayOfTurns()[0][0].getShape()
                     roundWinner = "DRAW"
                 }
-
+    
                 game.pushRound(round)
-
-                if(currentRound >= numberRounds){
-                    printBoardGame(points1, points2,currentRound)
-                    document.getElementById("button-board").style.display = 'none'
-                    const winnerBoard = document.getElementById("winner-board")
-                    winnerBoard.style.display = 'block'
-                    if(points1 == points2){
-                        winnerBoard.innerHTML = evenBoardLayout()
-                        document.getElementById("tiebreaker-button").addEventListener("click",function(){
-                            printBoardGame(points1, points2,currentRound)
-                            gameFunction()
-                        })
-                    }else{
-                        if(points1 > points2){
-                            winnerName = nameFirstPlayer
-                        }else if(points1 < points2){
-                            winnerName = nameSecondPlayer
-                        }
-                        winnerBoard.innerHTML = winnerBoardLayout(winnerName)
-                        document.getElementById("new-game-button").addEventListener("click", function(){
-                            location.reload()
-                        })
-                    }
-                }else{
-                    printBoardGame(points1,points2,currentRound)
-                    const winnerBoard = document.getElementById("winner-board")
-                    document.getElementById("button-board").style.display = 'none'
-                    winnerBoard.style.display = 'block'
-                    winnerBoard.innerHTML = turnWinnerLayout(roundWinner,round.getArrayOfTurns()[0][0].getShape(),round.getArrayOfTurns()[0][1].getShape())
-                    document.getElementById("result-place1").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][0].getShape()).getArrayOfImages()[0]}')`
-                    document.getElementById("result-place2").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][1].getShape()).getArrayOfImages()[1]}')`
-                    document.getElementById("next-turn-button").addEventListener("click",function(){
-                        printBoardGame(points1,points2,currentRound)
-                        gameFunction()
-                    })
-                }
-
-                newArray =  []
-                numTurno = 1
-                currentRound++
-                gameFunction()
-            }
-        })
-    })
-
-}
-
-function soloPlayer(){
-    let player1 = new Player(nameFirstPlayer, 0)
-    let player2 = new Player(nameSecondPlayer, 0)   
-    buttonImage(1)
-
-    document.querySelectorAll('[data-figure]').forEach(button => {
-        button.addEventListener("click", function(){
-            let roundWinner
-            let turno1 = new Turn()
-            let turnoPC = new Turn()
-            choice = button.getAttribute('data-figure')
-            turno1.setPlayer(player1.getName())
-            turno1.setShape(choice)
-            newArray.push(turno1) 
-
-            turnoPC.setPlayer(player2.getName())
-            turnoPC.setShape(randomShape())
-            newArray.push(turnoPC)
-
-            let result = cambiarForma(newArray[0]._parShape).defeats(newArray[1]._parShape)
-            let round = new Round()
-            round.setRoundNumber(currentRound)
-            round.pushArrayOfTurns(newArray)
-            round.setRoundWinner(result)
-
-            if(round.getRoundWinner()== 1){
-                shapeWinner = turno1.getShape()
-                roundWinner = nameFirstPlayer
-                points1++
-            }else if(round.getRoundWinner() == 2){
-                shapeWinner = turnoPC.getShape()
-                roundWinner = nameSecondPlayer
-                points2++
-            }else{
-                shapeWinner = turno1.getShape()
-                roundWinner = "DRAW"
-            }
-            game.pushRound(round)
-
-            if(currentRound >= numberRounds){
-                printBoardGame(points1, points2,currentRound)
-                document.getElementById("button-board").style.display = 'none'
-                const winnerBoard = document.getElementById("winner-board")
-                winnerBoard.style.display = 'block'
-                if(points1 == points2){
-                    winnerBoard.innerHTML = evenBoardLayout()
-                    document.getElementById("tiebreaker-button").addEventListener("click",function(){
-                        printBoardGame(points1, points2,currentRound)
-                        soloPlayer()
-                    })
-                }else{
-                    if(points1 > points2){
-                        winnerName = nameFirstPlayer
-                    }else if(points1 < points2){
-                        winnerName = nameSecondPlayer
-                    }
-                    winnerBoard.innerHTML = winnerBoardLayout(winnerName)
-                    document.getElementById("new-game-button").addEventListener("click", function(){
-                        location.reload()
-                    })
-                }
-            }else{
+    
                 printBoardGame(points1,points2,currentRound)
                 const winnerBoard = document.getElementById("winner-board")
                 document.getElementById("button-board").style.display = 'none'
                 winnerBoard.style.display = 'block'
-                winnerBoard.innerHTML = turnWinnerLayout(roundWinner, round.getArrayOfTurns()[0][0].getShape(),round.getArrayOfTurns()[0][1].getShape())
+                winnerBoard.innerHTML = turnWinnerLayout(roundWinner,round.getArrayOfTurns()[0][0].getShape(),round.getArrayOfTurns()[0][1].getShape())
                 document.getElementById("result-place1").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][0].getShape()).getArrayOfImages()[0]}')`
                 document.getElementById("result-place2").style.backgroundImage = `url('${cambiarForma(round.getArrayOfTurns()[0][1].getShape()).getArrayOfImages()[1]}')`
-                    
-                document.getElementById("next-turn-button").addEventListener("click",function(){
-                    printBoardGame(points1,points2,currentRound)
-                    soloPlayer()
-                })
+                const nextTurnButton = document.getElementById("next-turn-button")
+    
+                if(currentRound >= numberRounds){
+                    nextTurnButton.textContent = "SHOW WINNER"
+                    nextTurnButton.addEventListener("click", function(){
+                        printBoardGame(points1, points2,currentRound)
+                        document.getElementById("button-board").style.display = 'none'
+                        const winnerBoard = document.getElementById("winner-board")
+                        winnerBoard.style.display = 'block'
+                        if(points1 == points2){
+                            winnerBoard.innerHTML = evenBoardLayout()
+                            document.getElementById("tiebreaker-button").addEventListener("click",function(){
+                                currentRound++
+                                printBoardGame(points1, points2,currentRound)
+                                gamePlay()
+                            })
+                        }else{
+                            if(points1 > points2){
+                                winnerName = nameFirstPlayer
+                            }else if(points1 < points2){
+                                winnerName = nameSecondPlayer
+                            }
+                            winnerBoard.innerHTML = winnerBoardLayout(winnerName)
+                            document.getElementById("new-game-button").addEventListener("click", function(){
+                                location.reload()
+                            })
+                        }
+                    })
+                }else{
+                    nextTurnButton.addEventListener("click",function(){
+                        currentRound++
+                        printBoardGame(points1,points2,currentRound)
+                        gamePlay()
+                    })
+                }
+                newArray =  []
+                numTurno = 1
+                evalueate = false
             }
-
-            newArray =  []
-            numTurno = 1
-            currentRound++
-            soloPlayer()
         })
     })
+
 }
+
 
 function randomShape(){
     let random = Math.floor(Math.random() * 3)
